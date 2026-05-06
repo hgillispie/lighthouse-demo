@@ -10,7 +10,12 @@ export default defineAction({
     name: z.string().describe("Competitor name"),
     website: z.string().optional().describe("Main website URL"),
     pricing: z.string().optional().describe("Pricing page URL"),
-    github: z.string().optional().describe("GitHub repo (org/repo format)"),
+    github: z
+      .string()
+      .optional()
+      .describe(
+        "GitHub repo in 'org/repo' format (e.g. 'stackblitz-labs/bolt.diy'). Do NOT pass a full URL.",
+      ),
     hiring: z.string().optional().describe("Careers/hiring page URL"),
     description: z.string().optional().describe("Short description"),
   }),
@@ -19,9 +24,48 @@ export default defineAction({
     const email = getRequestUserEmail();
     if (!email) return "Error: Not authenticated";
 
+    const slug = slugify(args.name);
+
+    // Deduplicate: check if a competitor with this slug already exists (active or inactive)
+    const existing = await query<{ id: string; is_active: number }>(
+      `SELECT id, is_active FROM competitors WHERE owner_email = ? AND slug = ? LIMIT 1`,
+      [email, slug],
+    );
+
+    if (existing.length > 0) {
+      const dupe = existing[0];
+      if (dupe.is_active) {
+        return `Error: A competitor named "${args.name}" (slug: ${slug}) already exists (id: ${dupe.id}). Use update-competitor or add watch configs directly instead of creating a duplicate.`;
+      } else {
+        // Reactivate the soft-deleted competitor instead of creating a new one
+        const now = nowUnix();
+        await exec(
+          `UPDATE competitors SET is_active = 1, website_url = COALESCE(?, website_url), pricing_url = COALESCE(?, pricing_url), github_repo = COALESCE(?, github_repo), hiring_url = COALESCE(?, hiring_url), description = COALESCE(?, description), updated_at = ? WHERE id = ?`,
+          [
+            args.website || null,
+            args.pricing || null,
+            args.github || null,
+            args.hiring || null,
+            args.description || null,
+            now,
+            dupe.id,
+          ],
+        );
+        return `Reactivated existing competitor "${args.name}" (id: ${dupe.id}) instead of creating a duplicate.`;
+      }
+    }
+
+    // Normalize GitHub: strip full URL prefix if accidentally passed
+    let githubRepo = args.github;
+    if (githubRepo) {
+      // Strip https://github.com/ or http://github.com/ prefix if present
+      githubRepo = githubRepo
+        .replace(/^https?:\/\/github\.com\//, "")
+        .replace(/\/$/, "");
+    }
+
     const now = nowUnix();
     const competitorId = cuid();
-    const slug = slugify(args.name);
 
     await exec(
       `INSERT INTO competitors (id, owner_email, name, slug, website_url, pricing_url, github_repo, hiring_url, description, is_active, created_at, updated_at)
@@ -33,7 +77,7 @@ export default defineAction({
         slug,
         args.website || null,
         args.pricing || null,
-        args.github || null,
+        githubRepo || null,
         args.hiring || null,
         args.description || null,
         now,
@@ -61,9 +105,9 @@ export default defineAction({
         label: "Pricing Page",
       });
     }
-    if (args.github) {
+    if (githubRepo) {
       watchConfigs.push({
-        url: `https://api.github.com/repos/${args.github}/releases/latest`,
+        url: `https://api.github.com/repos/${githubRepo}/releases`,
         type: "github_releases",
         label: "GitHub Releases",
       });
