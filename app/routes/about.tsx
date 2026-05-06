@@ -250,9 +250,9 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {[
                 "What's new from our competitors?",
-                "Add a competitor called Bolt",
+                "Add a competitor",
                 "Generate a briefing for the last 48 hours",
-                "Check Lovable for updates",
+                "Run a sweep on all competitors",
                 "Search for pricing signals this week",
                 "What should I be worried about?",
               ].map((suggestion) => (
@@ -287,7 +287,7 @@ export default function AboutPage() {
               <ActionRow name="mark-read" description="Mark one or all signals as read." />
               <ActionRow name="scrape-url" description="Scrape a single URL and detect changes against the stored content hash." />
               <ActionRow name="delete-competitor" description="Soft-delete a competitor (deactivates monitoring, preserves signals)." />
-              <ActionRow name="seed-demo" description="Populate demo data with sample competitors (Lovable, v0, Replit) and signals." />
+              <ActionRow name="seed-demo" description="Populate demo data with sample competitors and signals for exploring the app." />
               <ActionRow name="navigate" description="Navigate the UI to a specific view (dashboard, competitor, briefings, settings)." />
               <ActionRow name="view-screen" description="Get a snapshot of the current UI state and visible data." />
             </div>
@@ -362,44 +362,71 @@ export default function AboutPage() {
           </div>
         </Section>
 
-        {/* Environment */}
+        {/* Configuration */}
         <Section>
-          <SectionTitle icon={IconSettings}>Environment Variables</SectionTitle>
-          <div className="rounded-lg border border-border divide-y divide-border">
-            <div className="flex items-start gap-3 px-4 py-3">
-              <code className="shrink-0 rounded bg-muted px-2 py-0.5 text-xs font-mono mt-0.5">DATABASE_URL</code>
-              <div>
-                <span className="text-sm text-muted-foreground">SQLite database path.</span>
-                <span className="ml-1.5 text-xs text-red-500 font-medium">Required</span>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 px-4 py-3">
-              <code className="shrink-0 rounded bg-muted px-2 py-0.5 text-xs font-mono mt-0.5">ANTHROPIC_API_KEY</code>
-              <div>
-                <span className="text-sm text-muted-foreground">API key for AI briefing generation.</span>
-                <span className="ml-1.5 text-xs text-red-500 font-medium">Required</span>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 px-4 py-3">
-              <code className="shrink-0 rounded bg-muted px-2 py-0.5 text-xs font-mono mt-0.5">SLACK_WEBHOOK_URL</code>
-              <div>
-                <span className="text-sm text-muted-foreground">Post signals to a Slack channel.</span>
-                <span className="ml-1.5 text-xs text-muted-foreground/60 font-medium">Optional</span>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 px-4 py-3">
-              <code className="shrink-0 rounded bg-muted px-2 py-0.5 text-xs font-mono mt-0.5">SCRAPE_PROXY_URL</code>
-              <div>
-                <span className="text-sm text-muted-foreground">Proxy for outbound scraping requests.</span>
-                <span className="ml-1.5 text-xs text-muted-foreground/60 font-medium">Optional</span>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 px-4 py-3">
-              <code className="shrink-0 rounded bg-muted px-2 py-0.5 text-xs font-mono mt-0.5">SEED_DEMO_DATA</code>
-              <div>
-                <span className="text-sm text-muted-foreground">Set to "true" to auto-seed demo competitors on startup.</span>
-                <span className="ml-1.5 text-xs text-muted-foreground/60 font-medium">Optional</span>
-              </div>
+          <SectionTitle icon={IconSettings}>Configuration</SectionTitle>
+          <div className="text-sm text-muted-foreground space-y-3 leading-relaxed">
+            <p>
+              Lighthouse is configured through the agent sidebar's <strong>Setup</strong> tab (gear icon).
+              Connect your LLM provider, database, messaging integrations, and more &mdash; no manual <CodeBlock>.env</CodeBlock> editing required.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <a
+                href="https://www.agent-native.com/docs/database"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 hover:bg-accent/50 transition-colors group"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                  <IconSettings className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary">Database</p>
+                  <p className="text-xs text-muted-foreground">Connect Postgres, SQLite, Neon, Turso, or Supabase</p>
+                </div>
+              </a>
+              <a
+                href="https://www.agent-native.com/docs/automations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 hover:bg-accent/50 transition-colors group"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                  <IconRadar className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary">Automations</p>
+                  <p className="text-xs text-muted-foreground">Scheduled sweeps, webhooks, and cron jobs</p>
+                </div>
+              </a>
+              <a
+                href="https://www.agent-native.com/docs/messaging"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 hover:bg-accent/50 transition-colors group"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                  <IconBell className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary">Messaging</p>
+                  <p className="text-xs text-muted-foreground">Slack, email, and webhook notifications</p>
+                </div>
+              </a>
+              <a
+                href="https://www.agent-native.com/docs/onboarding"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-lg border border-border bg-card p-3 hover:bg-accent/50 transition-colors group"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                  <IconBrain className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary">Onboarding</p>
+                  <p className="text-xs text-muted-foreground">First-run setup and LLM provider configuration</p>
+                </div>
+              </a>
             </div>
           </div>
         </Section>

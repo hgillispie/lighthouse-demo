@@ -5,28 +5,28 @@ import { query, exec, cuid, nowUnix } from "../server/db/queries.js";
 
 const COMPETITORS = [
   {
-    name: "Lovable",
-    slug: "lovable",
-    website_url: "https://lovable.dev",
-    pricing_url: "https://lovable.dev/pricing",
-    github_repo: "lovable-dev/gptengineer.app",
-    hiring_url: "https://lovable.dev/careers",
+    name: "Acme Corp",
+    slug: "acme-corp",
+    website_url: "https://example.com/acme",
+    pricing_url: "https://example.com/acme/pricing",
+    github_repo: "acme/acme-app",
+    hiring_url: "https://example.com/acme/careers",
   },
   {
-    name: "v0",
-    slug: "v0",
-    website_url: "https://v0.app",
-    pricing_url: "https://v0.app/pricing",
-    github_repo: "vercel/ai",
-    hiring_url: "https://vercel.com/careers",
+    name: "Initech",
+    slug: "initech",
+    website_url: "https://example.com/initech",
+    pricing_url: "https://example.com/initech/pricing",
+    github_repo: "initech/platform",
+    hiring_url: "https://example.com/initech/careers",
   },
   {
-    name: "Replit",
-    slug: "replit",
-    website_url: "https://replit.com",
-    pricing_url: "https://replit.com/pricing",
-    github_repo: "replit/extensions",
-    hiring_url: "https://replit.com/site/careers",
+    name: "Globex",
+    slug: "globex",
+    website_url: "https://example.com/globex",
+    pricing_url: "https://example.com/globex/pricing",
+    github_repo: "globex/globex-sdk",
+    hiring_url: "https://example.com/globex/careers",
   },
 ];
 
@@ -76,100 +76,91 @@ function watchConfigsFor(
 
 const SAMPLE_SIGNALS = [
   {
-    competitorSlug: "replit",
-    title:
-      "Replit raises $250M at $3B valuation — signals major agent and infrastructure push",
+    competitorSlug: "acme-corp",
+    title: "Acme Corp raises Series C — signals aggressive product expansion",
     type: "content_change",
-    severity: "high",
+    severity: "high" as const,
     daysAgo: 28,
     summary:
-      "Replit secured a $250M funding round at a $3B valuation, signaling aggressive expansion into AI agent capabilities and developer infrastructure.",
+      "Acme Corp announced a major funding round, signaling expansion into new markets and accelerated product development.",
   },
   {
-    competitorSlug: "lovable",
-    title:
-      "Business plan adds Security Centre and SSO — targeting enterprise buyers at $50/mo",
+    competitorSlug: "initech",
+    title: "Enterprise plan adds SSO and audit logs — targeting upmarket buyers",
     type: "pricing_change",
-    severity: "high",
+    severity: "high" as const,
     daysAgo: 22,
     summary:
-      "Lovable introduced a Business plan at $50/mo featuring Security Centre and SSO, clearly targeting enterprise adoption.",
+      "Initech introduced an Enterprise plan with SSO and audit logs, clearly targeting larger organizations.",
   },
   {
-    competitorSlug: "v0",
-    title:
-      "v0 ships full VS Code-style editor, Git integration, and PR workflows in major Feb update",
+    competitorSlug: "globex",
+    title: "Globex ships v3.0 with redesigned dashboard and API overhaul",
     type: "content_change",
-    severity: "high",
+    severity: "high" as const,
     daysAgo: 20,
     summary:
-      "v0 launched a full VS Code-style editor with Git integration and pull request workflows, significantly enhancing the developer experience.",
+      "Globex launched v3.0 featuring a completely redesigned dashboard and a modernized API surface.",
   },
   {
-    competitorSlug: "replit",
-    title:
-      "Replit Pro replaces Teams — $100/mo flat for 15 builders, Core drops to $20/mo",
+    competitorSlug: "acme-corp",
+    title: "Acme Pro plan drops from $99 to $49/mo — aggressive pricing move",
     type: "pricing_change",
-    severity: "high",
+    severity: "high" as const,
     daysAgo: 14,
     summary:
-      "Replit restructured pricing: Pro plan at $100/mo covers 15 builders, and Core plan dropped to $20/mo, simplifying the offering.",
+      "Acme Corp cut their Pro plan price in half, signaling a shift toward volume-based growth.",
   },
   {
-    competitorSlug: "lovable",
-    title:
-      "Lovable Cloud launched — integrated hosting, PostgreSQL, and auth now bundled with plans",
+    competitorSlug: "initech",
+    title: "Initech launches managed hosting — bundled infrastructure play",
     type: "content_change",
-    severity: "high",
+    severity: "high" as const,
     daysAgo: 12,
     summary:
-      "Lovable launched Lovable Cloud, bundling integrated hosting, PostgreSQL databases, and authentication into all plans.",
+      "Initech now offers managed hosting bundled with all paid plans, reducing deployment friction for customers.",
   },
   {
-    competitorSlug: "v0",
-    title:
-      "v0 agentic mode now autonomously plans, searches web, and debugs across multi-file projects",
-    type: "content_change",
-    severity: "high",
+    competitorSlug: "globex",
+    title: "Globex SDK v3.1 adds plugin system and webhook support",
+    type: "github_release",
+    severity: "medium" as const,
     daysAgo: 8,
     summary:
-      "v0 released an agentic mode that autonomously plans, searches the web, and debugs across multi-file projects.",
+      "Globex released SDK v3.1 with an extensible plugin architecture and native webhook integration.",
   },
   {
-    competitorSlug: "replit",
-    title:
-      "Agent 3 launched — autonomous sessions up to 200 min with Economy/Power/Turbo modes",
-    type: "content_change",
-    severity: "high",
+    competitorSlug: "acme-corp",
+    title: "Acme hiring 12 engineers across platform and ML teams",
+    type: "hiring_surge",
+    severity: "medium" as const,
     daysAgo: 6,
     summary:
-      "Replit launched Agent 3 with autonomous sessions lasting up to 200 minutes and three performance tiers.",
+      "Acme Corp posted 12 engineering roles focused on platform infrastructure and machine learning.",
   },
   {
-    competitorSlug: "lovable",
-    title:
-      "Lovable hiring 15 engineers across AI infra and full-stack generation roles",
+    competitorSlug: "initech",
+    title: "Initech careers page shows 8 new roles in sales and marketing",
     type: "hiring_surge",
-    severity: "medium",
+    severity: "medium" as const,
     daysAgo: 4,
     summary:
-      "Lovable posted 15 engineering positions focused on AI infrastructure and full-stack generation, indicating rapid team growth.",
+      "Initech is scaling their go-to-market team with 8 new sales and marketing positions.",
   },
   {
-    competitorSlug: "v0",
-    title:
-      "Figma import now available on Premium plan — design-to-code now one step",
+    competitorSlug: "globex",
+    title: "Globex blog announces open-source community edition",
     type: "content_change",
-    severity: "medium",
+    severity: "medium" as const,
     daysAgo: 2,
     summary:
-      "v0 added Figma import on the Premium plan, enabling one-step design-to-code workflows.",
+      "Globex announced a free community edition of their SDK, likely aiming to grow developer adoption.",
   },
 ];
 
 export default defineAction({
   description:
-    "Seed demo competitors, watch configs, and signals. Idempotent — skips if Lovable already exists.",
+    "Seed demo competitors, watch configs, and signals for exploring the app. Idempotent — skips if data already exists.",
   schema: z.object({}),
   http: false,
   run: async () => {
@@ -177,7 +168,7 @@ export default defineAction({
     if (!email) return "Error: Not authenticated";
 
     const existing = await query(
-      `SELECT id FROM competitors WHERE name = 'Lovable' AND owner_email = ?`,
+      `SELECT id FROM competitors WHERE name = 'Acme Corp' AND owner_email = ?`,
       [email],
     );
     if (existing.length > 0) {

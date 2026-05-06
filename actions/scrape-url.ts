@@ -1,16 +1,11 @@
 import { defineAction } from "@agent-native/core";
 import { getRequestUserEmail } from "@agent-native/core/server";
 import { z } from "zod";
-import crypto from "crypto";
 import { query, exec, nowUnix } from "../server/db/queries.js";
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function hashText(text: string): string {
-  return crypto.createHash("sha256").update(text).digest("hex");
-}
+import {
+  fetchWatchContent,
+  hashText,
+} from "../server/lib/check-utils.js";
 
 export default defineAction({
   description:
@@ -35,28 +30,10 @@ export default defineAction({
     const now = nowUnix();
 
     try {
-      let text: string;
-      let fetchUrl = args.url;
-
-      if (wc.watch_type === "github_releases") {
-        const res = await fetch(fetchUrl, {
-          headers: {
-            "User-Agent": "Lighthouse-Bot/1.0",
-            Accept: "application/vnd.github.v3+json",
-          },
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const release = (await res.json()) as Record<string, unknown>;
-        text = `${release.tag_name} ${release.name} ${release.body || ""}`;
-      } else {
-        const res = await fetch(fetchUrl, {
-          headers: { "User-Agent": "Lighthouse-Bot/1.0" },
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const html = await res.text();
-        text = stripHtml(html);
-      }
-
+      const text = await fetchWatchContent(
+        args.url,
+        wc.watch_type as string,
+      );
       const hash = hashText(text);
       const snippet = text.slice(0, 500);
       const previousHash = wc.last_content_hash as string | null;

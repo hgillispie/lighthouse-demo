@@ -97,3 +97,20 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Agent chat sidebar: prevent action bar overflow at narrow widths ── */
+
+/* On desktop/tablet, enforce a usable minimum so resize-drag can't clip buttons.
+   Skip mobile where the framework uses a fixed overlay with maxWidth: 85vw. */
+@media (min-width: 768px) {
+  .agent-sidebar-panel {
+    min-width: 320px;
+  }
+}
+
+/* Allow the composer action bar (plus / model / mode / voice / send) to wrap
+   instead of overflowing when the sidebar is narrow. */
+.agent-composer-area .flex.items-center.gap-1 {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+}

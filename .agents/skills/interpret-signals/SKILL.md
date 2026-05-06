@@ -23,14 +23,14 @@ When answering "what's new" or "what changed":
 
 1. Group by competitor first.
 2. Within each competitor, order by severity (high → medium → low).
-3. Highlight patterns across competitors (e.g., "both Lovable and Replit changed pricing this week").
+3. Highlight patterns across competitors (e.g., "two competitors changed pricing this week — could signal a market-wide trend").
 
 ## The "so what" rule
 
-Every answer about signals should include a "so what" for Builder's Fusion roadmap and positioning:
+Every answer about signals should include a "so what" for the user's product roadmap and positioning:
 
-- **Pricing changes**: How does this affect Fusion's pricing positioning?
-- **Feature launches**: Does Fusion have this? Should it? How does this change the competitive landscape?
+- **Pricing changes**: How does this affect your pricing positioning?
+- **Feature launches**: Do you have this? Should you? How does this change the competitive landscape?
 - **Hiring surges**: What capabilities are they building? Does this signal a strategic shift?
 - **Content changes**: Are they repositioning? Targeting a new segment?
 

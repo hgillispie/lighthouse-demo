@@ -11,11 +11,11 @@ Competitors are tracked in the `competitors` table. Each competitor can have mul
 |--------|-------|
 | `id` | cuid primary key |
 | `owner_email` | scoped to user |
-| `name` | Display name (e.g. "Bolt") |
-| `slug` | URL-safe identifier, derived from name (e.g. "bolt") |
+| `name` | Display name (e.g. "Acme") |
+| `slug` | URL-safe identifier, derived from name (e.g. "acme") |
 | `website_url` | Main website |
 | `pricing_url` | Pricing page |
-| `github_repo` | **`org/repo` format only** (e.g. `stackblitz-labs/bolt.diy`) — NOT a full URL |
+| `github_repo` | **`org/repo` format only** (e.g. `acme/acme-app`) — NOT a full URL |
 | `hiring_url` | Careers/jobs page |
 | `description` | Short description |
 | `is_active` | Soft-delete flag — 0 = deleted, 1 = active |
@@ -34,11 +34,11 @@ Competitors are tracked in the `competitors` table. Each competitor can have mul
 
 ```bash
 cd templates/starter && pnpm action add-competitor \
-  --name "Bolt" \
-  --website "https://bolt.new" \
-  --pricing "https://bolt.new/pricing" \
-  --github "stackblitz-labs/bolt.diy" \
-  --hiring "https://bolt.new/careers"
+  --name "Acme" \
+  --website "https://acme.com" \
+  --pricing "https://acme.com/pricing" \
+  --github "acme/acme-app" \
+  --hiring "https://acme.com/careers"
 ```
 
 ### Critical Rules
@@ -50,8 +50,8 @@ cd templates/starter && pnpm action add-competitor \
    The action now does this automatically and returns an error if a duplicate exists.
 
 2. **GitHub format is `org/repo` only** — Never pass a full GitHub URL to `--github`.
-   - ✅ `--github "stackblitz-labs/bolt.diy"`
-   - ❌ `--github "https://github.com/stackblitz-labs/bolt.diy"`
+   - ✅ `--github "acme/acme-app"`
+   - ❌ `--github "https://github.com/acme/acme-app"`
    
    The action strips full URL prefixes automatically, but always pass the short form.
 

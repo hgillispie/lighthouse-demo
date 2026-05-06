@@ -123,6 +123,11 @@ export function useCreateCompetitor() {
       pricingUrl?: string;
       githubRepo?: string;
       hiringUrl?: string;
+      customWatchConfigs?: Array<{
+        label: string;
+        url: string;
+        watchType: string;
+      }>;
     }) => apiFetch("/api/competitors", { method: "POST", body: JSON.stringify(data) }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["competitors"] }),
   });

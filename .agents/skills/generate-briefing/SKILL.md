@@ -30,8 +30,8 @@ The generated briefing follows this structure:
 5. **What to Watch**: per-competitor focus areas going forward
 
 When presenting a briefing to the user, lead with the most impactful finding:
-- "Replit restructured their pricing — this directly affects how Fusion is positioned."
-- "Lovable is hiring aggressively in AI infra — expect capability acceleration in 2-3 months."
+- "Competitor X restructured their pricing — this directly affects how you're positioned."
+- "Competitor Y is hiring aggressively in AI infra — expect capability acceleration in 2-3 months."
 
 ## Offering Slack delivery
 

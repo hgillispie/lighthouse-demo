@@ -7,6 +7,14 @@ import {
   IconCheck,
   IconPlus,
   IconCircleFilled,
+  IconSpy,
+  IconWorldWww,
+  IconCurrencyDollar,
+  IconBrandGithub,
+  IconUsers,
+  IconArrowRight,
+  IconMessageChatbot,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useSetPageTitle } from "@/components/layout/HeaderActions";
 import { Button } from "@/components/ui/button";
@@ -21,6 +29,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   useCompetitors,
   useSignals,
@@ -115,45 +130,115 @@ function SignalCard({ signal, expanded, onToggle }: { signal: Signal; expanded: 
 }
 
 function EmptyState({ onAdd }: { onAdd: () => void }) {
+  const capabilities = [
+    { icon: IconWorldWww, label: "Website changes", desc: "Detect content and messaging shifts" },
+    { icon: IconCurrencyDollar, label: "Pricing updates", desc: "Catch new plans, price drops, and packaging changes" },
+    { icon: IconBrandGithub, label: "GitHub releases", desc: "Track version bumps and changelogs" },
+    { icon: IconUsers, label: "Hiring signals", desc: "Spot team growth and strategic hires" },
+  ];
+
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
-      <svg
-        viewBox="0 0 64 80"
-        className="h-20 w-16 text-muted-foreground/40 mb-6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="22" y="16" width="20" height="52" rx="2" />
-        <rect x="18" y="48" width="28" height="20" rx="2" />
-        <line x1="32" y1="10" x2="32" y2="16" />
-        <circle cx="32" cy="6" r="4" />
-        <line x1="32" y1="2" x2="48" y2="2" strokeWidth="3" />
-        <line x1="32" y1="6" x2="52" y2="0" strokeWidth="2" opacity="0.5" />
-        <line x1="32" y1="6" x2="50" y2="8" strokeWidth="2" opacity="0.3" />
-      </svg>
-      <h2 className="text-xl font-semibold mb-2">Start tracking your competitors</h2>
-      <p className="text-sm text-muted-foreground max-w-md mb-6">
-        Lighthouse monitors websites, pricing pages, GitHub releases, and hiring boards.
-        Add a competitor to begin.
-      </p>
-      <Button onClick={onAdd}>
-        <IconPlus className="h-4 w-4" />
-        Add Your First Competitor
-      </Button>
+    <div className="flex flex-1 flex-col items-center justify-center px-4 sm:px-6 py-12 overflow-y-auto">
+      <div className="max-w-lg w-full space-y-8">
+        {/* Hero */}
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <IconSpy className="h-7 w-7" />
+            </div>
+          </div>
+          <h2 className="text-xl font-semibold">Welcome to Lighthouse</h2>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Competitive intelligence that watches your market 24/7. Add your first
+            competitor to start monitoring — Lighthouse will check their online presence
+            and surface changes as actionable signals.
+          </p>
+        </div>
+
+        {/* What we monitor */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {capabilities.map((cap) => (
+            <div key={cap.label} className="flex items-start gap-3 rounded-lg border border-border bg-card p-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                <cap.icon className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">{cap.label}</p>
+                <p className="text-xs text-muted-foreground">{cap.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="flex flex-col items-center gap-3">
+          <Button onClick={onAdd} size="lg" className="w-full sm:w-auto">
+            <IconPlus className="h-4 w-4" />
+            Add Your First Competitor
+          </Button>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <IconMessageChatbot className="h-3.5 w-3.5" />
+              Or ask the agent chat
+              <IconArrowRight className="h-3 w-3" />
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
+interface CustomRow {
+  key: string;
+  label: string;
+  url: string;
+  watchType: string;
+}
+
+const WATCH_TYPE_OPTIONS = [
+  { value: "webpage", label: "Web Page" },
+  { value: "pricing", label: "Pricing Page" },
+  { value: "hiring", label: "Hiring Page" },
+  { value: "github_releases", label: "GitHub Releases" },
+  { value: "rss", label: "RSS Feed" },
+];
+
 function AddCompetitorDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createCompetitor = useCreateCompetitor();
   const navigate = useNavigate();
+  const [customRows, setCustomRows] = useState<CustomRow[]>([]);
+
+  function addCustomRow() {
+    setCustomRows((prev) => [
+      ...prev,
+      { key: crypto.randomUUID(), label: "", url: "", watchType: "webpage" },
+    ]);
+  }
+
+  function removeCustomRow(key: string) {
+    setCustomRows((prev) => prev.filter((r) => r.key !== key));
+  }
+
+  function updateCustomRow(key: string, field: keyof Omit<CustomRow, "key">, value: string) {
+    setCustomRows((prev) =>
+      prev.map((r) => (r.key === key ? { ...r, [field]: value } : r)),
+    );
+  }
+
+  function handleClose() {
+    setCustomRows([]);
+    onClose();
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+
+    const validCustom = customRows
+      .filter((r) => r.url.trim() && r.label.trim())
+      .map((r) => ({ label: r.label.trim(), url: r.url.trim(), watchType: r.watchType }));
+
     createCompetitor.mutate(
       {
         name: fd.get("name") as string,
@@ -161,11 +246,12 @@ function AddCompetitorDrawer({ open, onClose }: { open: boolean; onClose: () => 
         pricingUrl: (fd.get("pricingUrl") as string) || undefined,
         githubRepo: (fd.get("githubRepo") as string) || undefined,
         hiringUrl: (fd.get("hiringUrl") as string) || undefined,
+        customWatchConfigs: validCustom.length > 0 ? validCustom : undefined,
       },
       {
         onSuccess: (data: any) => {
           toast.success(`Added ${fd.get("name")}`);
-          onClose();
+          handleClose();
           navigate(`/competitors/${data.slug}`);
         },
         onError: () => toast.error("Failed to create competitor"),
@@ -174,8 +260,8 @@ function AddCompetitorDrawer({ open, onClose }: { open: boolean; onClose: () => 
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent className="sm:max-w-md">
+    <Sheet open={open} onOpenChange={(v) => !v && handleClose()}>
+      <SheetContent className="sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Add Competitor</SheetTitle>
           <SheetDescription>Track a new competitor's online presence.</SheetDescription>
@@ -201,6 +287,67 @@ function AddCompetitorDrawer({ open, onClose }: { open: boolean; onClose: () => 
             <Label htmlFor="hiringUrl">Hiring Page</Label>
             <Input id="hiringUrl" name="hiringUrl" placeholder="https://acme.com/careers" />
           </div>
+
+          {/* Custom URL rows */}
+          {customRows.length > 0 && (
+            <div className="space-y-3 pt-2 border-t border-border">
+              <p className="text-xs font-medium text-muted-foreground">Custom URLs</p>
+              {customRows.map((row) => (
+                <div key={row.key} className="space-y-2 rounded-lg border border-border p-3 bg-muted/30">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={row.label}
+                      onChange={(e) => updateCustomRow(row.key, "label", e.target.value)}
+                      placeholder="Label (e.g. Blog)"
+                      className="flex-1 h-8 text-sm"
+                    />
+                    <Select
+                      value={row.watchType}
+                      onValueChange={(v) => updateCustomRow(row.key, "watchType", v)}
+                    >
+                      <SelectTrigger className="w-[130px] h-8 text-sm">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WATCH_TYPE_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={() => removeCustomRow(row.key)}
+                    >
+                      <IconTrash className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  <Input
+                    value={row.url}
+                    onChange={(e) => updateCustomRow(row.key, "url", e.target.value)}
+                    placeholder="https://..."
+                    className="h-8 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={addCustomRow}
+          >
+            <IconPlus className="h-3.5 w-3.5" />
+            Add custom URL
+          </Button>
+
           <Button type="submit" className="w-full" disabled={createCompetitor.isPending}>
             {createCompetitor.isPending ? <Spinner className="h-4 w-4" /> : "Add Competitor"}
           </Button>

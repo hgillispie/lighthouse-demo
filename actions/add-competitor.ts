@@ -2,6 +2,7 @@ import { defineAction } from "@agent-native/core";
 import { getRequestUserEmail } from "@agent-native/core/server";
 import { z } from "zod";
 import { query, exec, cuid, slugify, nowUnix } from "../server/db/queries.js";
+import { checkCompetitor } from "../server/lib/check-utils.js";
 
 export default defineAction({
   description:
@@ -14,7 +15,7 @@ export default defineAction({
       .string()
       .optional()
       .describe(
-        "GitHub repo in 'org/repo' format (e.g. 'stackblitz-labs/bolt.diy'). Do NOT pass a full URL.",
+        "GitHub repo in 'org/repo' format (e.g. 'acme/acme-app'). Do NOT pass a full URL.",
       ),
     hiring: z.string().optional().describe("Careers/hiring page URL"),
     description: z.string().optional().describe("Short description"),
@@ -128,6 +129,18 @@ export default defineAction({
       );
     }
 
+    // Run initial check to establish baselines and create "now tracking" signals
+    let checkSummary = "";
+    if (watchConfigs.length > 0) {
+      const checkResult = await checkCompetitor(competitorId, email, {
+        createBaselineSignal: true,
+      });
+      checkSummary = ` Initial scan: ${checkResult.configsChecked} source(s) checked, ${checkResult.signalsCreated} signal(s) created.`;
+      if (checkResult.errors.length > 0) {
+        checkSummary += ` Errors: ${checkResult.errors.join("; ")}`;
+      }
+    }
+
     const result = {
       id: competitorId,
       name: args.name,
@@ -136,6 +149,6 @@ export default defineAction({
     };
 
     console.log(JSON.stringify(result, null, 2));
-    return `Created competitor "${args.name}" (${slug}) with ${watchConfigs.length} watch config(s).`;
+    return `Created competitor "${args.name}" (${slug}) with ${watchConfigs.length} watch config(s).${checkSummary}`;
   },
 });

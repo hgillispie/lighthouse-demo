@@ -2,11 +2,13 @@
 
 Competitive intelligence that runs 24/7. Lighthouse monitors competitor websites, pricing pages, GitHub releases, and hiring boards — detecting changes automatically and surfacing them as actionable signals in a live feed with AI-generated briefings.
 
+Built on [@agent-native/core](https://www.agent-native.com).
+
 ## Quickstart
 
 ```bash
-npx @agent-native/core create lighthouse --template starter --standalone
-cd lighthouse
+pnpm dlx @agent-native/core create my-lighthouse --template github:hgillispie/lighthouse-template
+cd my-lighthouse
 pnpm install && pnpm dev
 ```
 
@@ -16,11 +18,14 @@ pnpm install && pnpm dev
 |---|---|---|
 | `DATABASE_URL` | Yes | Database connection string (auto-configured in dev) |
 | `ANTHROPIC_API_KEY` | Yes | API key for the AI agent |
-| `SEED_DEMO_DATA` | No | Set to `true` to seed Lovable, v0, and Replit as demo competitors |
+| `SEED_DEMO_DATA` | No | Set to `true` to auto-seed sample competitors on first boot |
 | `SLACK_WEBHOOK_URL` | No | Slack incoming webhook for alert delivery |
 | `SCRAPE_PROXY_URL` | No | Proxy URL for scraping (useful for avoiding rate limits) |
 
 ## Adding Competitors
+
+**Via the UI:**
+Click **Add** on the Dashboard and fill in the competitor name and URLs. Watch configs and an initial scan are created automatically.
 
 **Via CLI:**
 ```bash
@@ -28,7 +33,7 @@ pnpm action add-competitor --name "Acme" --website "https://acme.com" --pricing 
 ```
 
 **Via agent chat:**
-> "Add a competitor called Bolt — their website is bolt.new"
+> "Add a competitor called Acme — their website is acme.com"
 
 The agent will look up missing URLs and create watch configs for each.
 
@@ -40,17 +45,19 @@ The agent will look up missing URLs and create watch configs for each.
 - **On change**: Creates a signal with auto-inferred type and severity
 - **On error**: Logs the error to the watch config's `last_content_snippet` field without creating a false-positive signal
 
-Trigger a manual sweep anytime via the "Run Sweep" button on the dashboard or `pnpm action check-all-competitors`.
+Trigger a manual sweep anytime via the **Sweep** button on the dashboard or `pnpm action check-all-competitors`.
 
 ## Customizing Watch Intervals
 
 Each watch config has a `check_interval_hours` field (default: 4). Change it via:
 - The Watch Configs tab on a competitor's detail page
-- Asking the agent: "Change the check interval for Lovable's pricing page to 1 hour"
+- Asking the agent: "Change the check interval for Acme's pricing page to 1 hour"
 
-## Forking for Your Own Company
+## Extending
 
-1. **Replace competitors**: Remove the demo seed data and add your own competitors via the UI or CLI
-2. **Update AGENTS.md context**: Change references from "Builder's Fusion" to your product in `.agents/AGENTS.md` and the interpret-signals skill
-3. **Adjust briefing framing**: Edit the "What to Watch" section template in `actions/generate-briefing.ts` to reference your competitors
-4. **Configure environment**: Set `SLACK_WEBHOOK_URL` for alerts, `SCRAPE_PROXY_URL` if needed
+- **New watch types**: Add scraping logic for new source types (RSS, social media, SEC filings)
+- **Notification channels**: Wire `SLACK_WEBHOOK_URL` for Slack alerts, or add email/Discord/webhook
+- **Custom analysis**: Customize the briefing prompt or add trend-detection actions
+- **New pages & skills**: Follow the checklist in `AGENTS.md` to add routes, actions, and agent skills
+
+See the [About page](/about) in the running app for full documentation.
