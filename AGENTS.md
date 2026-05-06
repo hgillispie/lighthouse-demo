@@ -28,16 +28,10 @@ Resources are SQL-backed persistent files for storing notes, learnings, and cont
 
 Ephemeral UI state is stored in the SQL `application_state` table, accessed via `readAppState(key)` and `writeAppState(key, value)` from `@agent-native/core/application-state`.
 
-| State Key    | Purpose                                   | Direction                  |
-| ------------ | ----------------------------------------- | -------------------------- |
-| `navigation` | Current view (`home` or `new-app`)        | UI -> Agent (read-only)    |
-| `navigate`   | Navigate command (one-shot, auto-deleted) | Agent -> UI (auto-deleted) |
-
-## Workspace App Creation
-
-The `/new-app` route lets the user prompt a new workspace app and choose which Dispatch vault keys it should receive. When loaded inside Builder, code prompts are delegated to Builder chat; in local dev, they go to the agent-native code agent. In production, app creation is only enabled when Builder branching is explicitly configured.
-
-When creating a new app from this flow, keep apps under `apps/<app-id>`, mount them at `/<app-id>`, use the shared workspace database/hosting model, and namespace any new domain tables so apps do not collide.
+| State Key    | Purpose                                                         | Direction                  |
+| ------------ | --------------------------------------------------------------- | -------------------------- |
+| `navigation` | Current view (dashboard, competitor, briefings, settings)       | UI -> Agent (read-only)    |
+| `navigate`   | Navigate command (one-shot, auto-deleted)                       | Agent -> UI (auto-deleted) |
 
 ## Agent Operations
 
@@ -53,24 +47,36 @@ cd templates/starter && pnpm action <name> [args]
 
 ### Actions
 
-| Action        | Args                              | Purpose                         |
-| ------------- | --------------------------------- | ------------------------------- |
-| `view-screen` |                                   | See current UI state            |
-| `navigate`    | `--view <name>` or `--path <url>` | Navigate the UI                 |
-| `hello`       | `[--name <name>]`                 | Example script                  |
-| `db-schema`   |                                   | Show all tables, columns, types |
-| `db-query`    | `--sql "SELECT ..."`              | Run a SELECT query              |
-| `db-exec`     | `--sql "INSERT ..."`              | Run INSERT/UPDATE/DELETE        |
+| Action                  | Args                                                      | Purpose                           |
+| ----------------------- | --------------------------------------------------------- | --------------------------------- |
+| `view-screen`           |                                                           | See current UI state + data       |
+| `navigate`              | `--view <name>` `--competitorSlug` `--briefingId`         | Navigate the UI                   |
+| `add-competitor`        | `--name` `--website` `--pricing` `--github` `--hiring`    | Add a new competitor              |
+| `check-competitor`      | `--competitorId <id>`                                     | Check one competitor's URLs       |
+| `check-all-competitors` |                                                           | Full sweep of all competitors     |
+| `scrape-url`            | `--url` `--watchConfigId`                                 | Scrape a single URL               |
+| `create-signal`         | `--competitorId` `--title` `--type` `--severity` `--url`  | Manually create a signal          |
+| `mark-read`             | `--signalId` or `--all`                                   | Mark signal(s) as read            |
+| `generate-briefing`     | `--hours` (default 24)                                    | Generate a competitive briefing   |
+| `search-signals`        | `--query` `--competitorSlug` `--days` `--type`            | Search signals                    |
+| `delete-competitor`     | `--competitorId`                                          | Soft-delete a competitor          |
+| `seed-demo`             |                                                           | Seed demo data (Lovable, v0, Replit) |
+| `db-schema`             |                                                           | Show all tables, columns, types   |
+| `db-query`              | `--sql "SELECT ..."`                                      | Run a SELECT query                |
+| `db-exec`               | `--sql "INSERT ..."`                                      | Run INSERT/UPDATE/DELETE          |
 
 ## Skills
 
-| Skill                 | When to read                                                   |
-| --------------------- | -------------------------------------------------------------- |
-| `storing-data`        | Before storing or reading any app state                        |
-| `delegate-to-agent`   | Before adding LLM calls or AI delegation                       |
-| `actions`             | Before creating or modifying scripts                           |
-| `self-modifying-code` | Before editing source, components, or styles                   |
-| `frontend-design`     | Before building or restyling any UI component, page, or layout |
+| Skill                   | When to read                                                   |
+| ----------------------- | -------------------------------------------------------------- |
+| `add-competitor`        | Before adding a competitor                                     |
+| `interpret-signals`     | Before answering questions about competitive moves             |
+| `generate-briefing`     | Before generating or discussing briefings                      |
+| `storing-data`          | Before storing or reading any app state                        |
+| `delegate-to-agent`     | Before adding LLM calls or AI delegation                       |
+| `actions`               | Before creating or modifying scripts                           |
+| `self-modifying-code`   | Before editing source, components, or styles                   |
+| `frontend-design`       | Before building or restyling any UI component, page, or layout |
 
 ## When Adding Features
 
@@ -85,8 +91,6 @@ As you build out this app, follow this checklist for each new feature:
 ### Authentication
 
 This template uses the framework's default auth — Better Auth, with email/password and optional Google / GitHub social providers. New users create an account on first visit. Use `getSession(event)` server-side and `useSession()` client-side.
-
-See the `authentication` skill for the full mode matrix (`AUTH_MODE=local` for solo dev, `ACCESS_TOKEN` for shared-token deploys, `AUTH_DISABLED` for infrastructure auth, BYOA for custom providers) and the `security` skill for per-user / per-org data scoping.
 
 ### UI Components
 

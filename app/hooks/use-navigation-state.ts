@@ -1,11 +1,25 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { agentNativePath } from "@agent-native/core/client";
 
 export interface NavigationState {
   view: string;
   path?: string;
+  competitorSlug?: string;
+  competitorId?: string;
+  briefingId?: string;
+}
+
+function resolveView(pathname: string): NavigationState {
+  if (pathname.startsWith("/competitors/")) {
+    const slug = pathname.split("/")[2];
+    return { view: "competitor", competitorSlug: slug, path: pathname };
+  }
+  if (pathname.startsWith("/briefings")) return { view: "briefings", path: pathname };
+  if (pathname.startsWith("/settings")) return { view: "settings", path: pathname };
+  if (pathname.startsWith("/new-app")) return { view: "new-app", path: pathname };
+  return { view: "dashboard", path: pathname };
 }
 
 export function useNavigationState() {
@@ -13,13 +27,8 @@ export function useNavigationState() {
   const navigate = useNavigate();
   const qc = useQueryClient();
 
-  // Sync current route to application state
   useEffect(() => {
-    const state: NavigationState = {
-      view: location.pathname.startsWith("/new-app") ? "new-app" : "home",
-      path: location.pathname,
-    };
-
+    const state = resolveView(location.pathname);
     fetch(agentNativePath("/_agent-native/application-state/navigation"), {
       method: "PUT",
       keepalive: true,
@@ -28,7 +37,6 @@ export function useNavigationState() {
     }).catch(() => {});
   }, [location.pathname]);
 
-  // Listen for navigate commands from agent
   const { data: navCommand } = useQuery({
     queryKey: ["navigate-command"],
     queryFn: async () => {
@@ -37,10 +45,7 @@ export function useNavigationState() {
       );
       if (!res.ok) return null;
       const data = await res.json();
-      if (data) {
-        // Return with a timestamp to ensure uniqueness
-        return { ...data, _ts: Date.now() };
-      }
+      if (data) return { ...data, _ts: Date.now() };
       return null;
     },
     refetchInterval: 2_000,
@@ -50,15 +55,13 @@ export function useNavigationState() {
 
   useEffect(() => {
     if (!navCommand) return;
-    // Delete the one-shot command AFTER reading it
     fetch(agentNativePath("/_agent-native/application-state/navigate"), {
       method: "DELETE",
       headers: { "X-Agent-Native-CSRF": "1" },
     }).catch(() => {});
-    const cmd = navCommand as NavigationState;
 
-    // Navigate to a specific path or resolve view name to path
-    const path = cmd.path || (cmd.view === "new-app" ? "/new-app" : "/");
+    const cmd = navCommand as NavigationState;
+    const path = cmd.path || "/";
     navigate(path);
     qc.setQueryData(["navigate-command"], null);
   }, [navCommand, navigate, qc]);

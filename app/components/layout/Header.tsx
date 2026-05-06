@@ -4,16 +4,18 @@ import { useHeaderTitle, useHeaderActions } from "./HeaderActions";
 import { AgentToggleButton } from "@agent-native/core/client";
 
 const pageTitles: Record<string, string> = {
-  "/": "Home",
+  "/": "Dashboard",
   "/observability": "Observability",
   "/settings": "Settings",
-  "/team": "Team",
+  "/briefings": "Briefings",
+  "/about": "About",
 };
 
 function resolveTitle(pathname: string): string {
   if (pageTitles[pathname]) return pageTitles[pathname];
+  if (pathname.startsWith("/competitors")) return "Competitor";
   if (pathname.startsWith("/extensions")) return "Extensions";
-  return "Starter";
+  return "Lighthouse";
 }
 
 interface HeaderProps {
@@ -32,7 +34,7 @@ export function Header({ onOpenMobileSidebar }: HeaderProps) {
           type="button"
           onClick={onOpenMobileSidebar}
           aria-label="Open navigation"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent md:hidden"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent lg:hidden"
         >
           <IconMenu2 className="h-4 w-4" />
         </button>

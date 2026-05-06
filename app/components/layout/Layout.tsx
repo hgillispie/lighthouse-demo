@@ -38,7 +38,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <HeaderActionsProvider>
       <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <Sidebar />
         </div>
         <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
@@ -55,14 +55,14 @@ export function Layout({ children }: LayoutProps) {
           defaultOpen
           emptyStateText="How can I help?"
           suggestions={[
-            "What can you do?",
-            "Show me the database schema",
-            "Create something cool",
+            "What's new from our competitors?",
+            "Add a competitor called Bolt",
+            "Generate a briefing",
           ]}
         >
           <div className="flex h-full flex-1 flex-col overflow-hidden">
             {ownsToolbar ? (
-              <div className="flex h-12 items-center border-b border-border px-4 md:hidden shrink-0">
+              <div className="flex h-12 items-center border-b border-border px-4 lg:hidden shrink-0">
                 <button
                   type="button"
                   onClick={() => setMobileSidebarOpen(true)}

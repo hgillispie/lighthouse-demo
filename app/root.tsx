@@ -33,6 +33,9 @@ configureTracking({
 });
 
 export const links: LinksFunction = () => [
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+  { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" },
   { rel: "stylesheet", href: stylesheet },
 ];
 
@@ -55,7 +58,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="apple-mobile-web-app-title" content="Starter" />
+        <meta name="apple-mobile-web-app-title" content="Lighthouse" />
         <link rel="icon" type="image/svg+xml" href={appPath("/favicon.svg")} />
         <link rel="apple-touch-icon" href={appPath("/icon-180.svg")} />
         <Meta />
@@ -77,7 +80,7 @@ function DbSyncSetup() {
   useNavigationState();
   useDbSync({
     queryClient: qc,
-    queryKeys: ["files", "data"],
+    queryKeys: ["files", "data", "competitors", "signals", "briefings", "competitor", "competitor-detail"],
     ignoreSource: TAB_ID,
   });
   return null;

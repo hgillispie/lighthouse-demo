@@ -1,12 +1,21 @@
 import { Link, useLocation } from "react-router";
-import { IconActivity, IconHome, IconPlus } from "@tabler/icons-react";
+import {
+  IconActivity,
+  IconLayoutDashboard,
+  IconSpy,
+  IconFileText,
+  IconSettings,
+  IconInfoCircle,
+} from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { ExtensionsSidebarSection } from "@agent-native/core/client/extensions";
 import { FeedbackButton, appPath } from "@agent-native/core/client";
 
 const navItems = [
-  { icon: IconHome, label: "Home", href: "/" },
-  { icon: IconPlus, label: "New App", href: "/new-app" },
+  { icon: IconLayoutDashboard, label: "Dashboard", href: "/" },
+  { icon: IconFileText, label: "Briefings", href: "/briefings" },
+  { icon: IconSettings, label: "Settings", href: "/settings" },
+  { icon: IconInfoCircle, label: "About", href: "/about" },
   { icon: IconActivity, label: "Observability", href: "/observability" },
 ];
 
@@ -15,20 +24,11 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-full w-56 min-w-0 shrink-0 flex-col overflow-hidden border-r border-border bg-sidebar text-sidebar-foreground">
-      <div className="flex h-12 shrink-0 items-center gap-2 px-4 border-b border-border">
-        <img
-          src={appPath("/agent-native-icon-light.svg")}
-          alt=""
-          aria-hidden="true"
-          className="block h-4 w-auto dark:hidden"
-        />
-        <img
-          src={appPath("/agent-native-icon-dark.svg")}
-          alt=""
-          aria-hidden="true"
-          className="hidden h-4 w-auto dark:block"
-        />
-        <span className="text-sm font-semibold tracking-tight">Starter</span>
+      <div className="flex h-12 shrink-0 items-center gap-2.5 px-4 border-b border-border">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <IconSpy className="h-4 w-4" />
+        </div>
+        <span className="text-sm font-semibold tracking-tight">Lighthouse</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
@@ -36,7 +36,7 @@ export function Sidebar() {
           const Icon = item.icon;
           const isActive =
             item.href === "/"
-              ? location.pathname === "/"
+              ? location.pathname === "/" || location.pathname.startsWith("/competitors")
               : location.pathname.startsWith(item.href);
           return (
             <Link

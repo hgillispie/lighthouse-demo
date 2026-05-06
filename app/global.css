@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
 @import "tailwindcss";
 @import "@agent-native/core/styles/agent-native.css";
 
@@ -69,7 +67,8 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: "Inter", sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
@@ -88,4 +87,13 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
