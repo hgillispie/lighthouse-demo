@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   IconTrash,
-  IconCircleCheck,
-  IconCircleX,
   IconPlus,
 } from "@tabler/icons-react";
 import { useSetPageTitle } from "@/components/layout/HeaderActions";
@@ -140,13 +138,6 @@ export default function SettingsPage() {
     );
   }
 
-  const envVars = [
-    { name: "DATABASE_URL", required: true, present: true },
-    { name: "ANTHROPIC_API_KEY", required: true, present: true },
-    { name: "SLACK_WEBHOOK_URL", required: false, present: false },
-    { name: "SCRAPE_PROXY_URL", required: false, present: false },
-  ];
-
   return (
     <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
       <Card>
@@ -218,29 +209,6 @@ export default function SettingsPage() {
               })}
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Environment</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {envVars.map((v) => (
-              <div key={v.name} className="flex items-center gap-3">
-                {v.present ? (
-                  <IconCircleCheck className="h-4 w-4 text-emerald-500" />
-                ) : (
-                  <IconCircleX className={`h-4 w-4 ${v.required ? "text-red-500" : "text-muted-foreground"}`} />
-                )}
-                <span className="text-sm font-mono">{v.name}</span>
-                {!v.required && (
-                  <span className="text-xs text-muted-foreground">optional</span>
-                )}
-              </div>
-            ))}
-          </div>
         </CardContent>
       </Card>
 

@@ -345,7 +345,7 @@ export default function AboutPage() {
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-foreground">Add new pages &amp; skills</h4>
               <p>
-                To add a new feature, follow the checklist in <CodeBlock>CLAUDE.md</CodeBlock>:
+                To add a new feature, follow the checklist in the project's agent guide:
                 add route files under <CodeBlock>app/routes/</CodeBlock>, create corresponding agent
                 actions, write a skill doc in <CodeBlock>.agents/skills/</CodeBlock>, and update
                 the navigation state tracking.

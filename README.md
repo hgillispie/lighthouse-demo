@@ -17,7 +17,7 @@ pnpm install && pnpm dev
 | Variable | Required | Description |
 |---|---|---|
 | `DATABASE_URL` | Yes | Database connection string (auto-configured in dev) |
-| `ANTHROPIC_API_KEY` | Yes | API key for the AI agent |
+| `LLM_API_KEY` | Yes | API key for the AI agent (configure via the Setup tab) |
 | `SEED_DEMO_DATA` | No | Set to `true` to auto-seed sample competitors on first boot |
 | `SLACK_WEBHOOK_URL` | No | Slack incoming webhook for alert delivery |
 | `SCRAPE_PROXY_URL` | No | Proxy URL for scraping (useful for avoiding rate limits) |
