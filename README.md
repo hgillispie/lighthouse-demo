@@ -7,8 +7,7 @@ Built on [@agent-native/core](https://www.agent-native.com).
 ## Quickstart
 
 ```bash
-pnpm dlx @agent-native/core create my-lighthouse --template github:hgillispie/lighthouse-template
-cd my-lighthouse
+
 pnpm install && pnpm dev
 ```
 
