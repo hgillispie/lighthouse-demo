@@ -287,7 +287,6 @@ export default function AboutPage() {
               <ActionRow name="mark-read" description="Mark one or all signals as read." />
               <ActionRow name="scrape-url" description="Scrape a single URL and detect changes against the stored content hash." />
               <ActionRow name="delete-competitor" description="Soft-delete a competitor (deactivates monitoring, preserves signals)." />
-              <ActionRow name="seed-demo" description="Populate demo data with sample competitors and signals for exploring the app." />
               <ActionRow name="navigate" description="Navigate the UI to a specific view (dashboard, competitor, briefings, settings)." />
               <ActionRow name="view-screen" description="Get a snapshot of the current UI state and visible data." />
             </div>

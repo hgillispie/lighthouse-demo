@@ -60,7 +60,6 @@ cd templates/starter && pnpm action <name> [args]
 | `generate-briefing`     | `--hours` (default 24)                                    | Generate a competitive briefing   |
 | `search-signals`        | `--query` `--competitorSlug` `--days` `--type`            | Search signals                    |
 | `delete-competitor`     | `--competitorId`                                          | Soft-delete a competitor          |
-| `seed-demo`             |                                                           | Seed sample demo data            |
 | `db-schema`             |                                                           | Show all tables, columns, types   |
 | `db-query`              | `--sql "SELECT ..."`                                      | Run a SELECT query                |
 | `db-exec`               | `--sql "INSERT ..."`                                      | Run INSERT/UPDATE/DELETE          |
