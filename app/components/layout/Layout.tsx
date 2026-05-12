@@ -53,7 +53,7 @@ export function Layout({ children }: LayoutProps) {
         <AgentSidebar
           position="right"
           defaultOpen
-          defaultSidebarWidth={380}
+          defaultSidebarWidth={420}
           emptyStateText="How can I help?"
           suggestions={[
             "What's new from our competitors?",

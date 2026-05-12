@@ -104,8 +104,21 @@
    Skip mobile where the framework uses a fixed overlay with maxWidth: 85vw. */
 @media (min-width: 768px) {
   .agent-sidebar-panel {
-    min-width: 320px;
+    min-width: 360px;
   }
+}
+
+/* Agent panel header: mode row (Chat / CLI / Workspace / setup gear) uses
+   overflow-hidden in @agent-native/core, which clips the gear when narrow.
+   Allow horizontal scroll with hidden scrollbar so all controls stay reachable. */
+.agent-panel-root .flex.min-w-0.flex-1.items-center.gap-1.overflow-hidden {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.agent-panel-root .flex.min-w-0.flex-1.items-center.gap-1.overflow-hidden::-webkit-scrollbar {
+  display: none;
 }
 
 /* Allow the composer action bar (plus / model / mode / voice / send) to wrap
